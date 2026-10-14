@@ -1,0 +1,23 @@
+node_modules
+.next
+out
+coverage
+
+# Env
+.env
+.env*.local
+!.env.example
+
+# Tests
+playwright-report
+test-results
+
+# Vercel
+.vercel
+
+# OS / logs
+*.log
+.DS_Store
+
+# TypeScript
+*.tsbuildinfo
