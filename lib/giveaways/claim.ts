@@ -1,5 +1,5 @@
 /**
- * Giveaway claim transaction building and execution.
+ * Giveaway claim and reclaim transaction building and execution.
  */
 
 import { stellarConfig } from "../stellar";
@@ -93,6 +93,70 @@ export async function executeGiveawayClaim(
     const txCode = errJson.extras?.result_codes?.transaction;
     throw new Error(
       `Claim failed on Stellar network: ${opCodes || txCode || subRes.statusText}`,
+    );
+  }
+
+  const resData = (await subRes.json()) as { hash: string };
+  return {
+    success: true,
+    txHash: resData.hash,
+  };
+}
+
+/**
+ * Reclaims an expired giveaway claimable balance back to the creator/sponsor.
+ */
+export async function executeReclaimExpired(options: {
+  creatorAddress: string;
+  balanceId: string;
+}): Promise<ClaimResult> {
+  const { creatorAddress, balanceId } = options;
+
+  const {
+    TransactionBuilder,
+    Account,
+    Operation,
+  } = await import("@stellar/stellar-sdk");
+
+  const accRes = await fetch(`${stellarConfig.horizonUrl}/accounts/${creatorAddress}`);
+  if (!accRes.ok) {
+    throw new Error("Could not load creator account details from Horizon.");
+  }
+  const accountData = (await accRes.json()) as { sequence: string };
+  const stellarAccount = new Account(creatorAddress, accountData.sequence);
+
+  const txBuilder = new TransactionBuilder(stellarAccount, {
+    fee: "100",
+    networkPassphrase: stellarConfig.networkPassphrase,
+  });
+
+  txBuilder.addOperation(
+    Operation.claimClaimableBalance({
+      balanceId,
+    }),
+  );
+
+  txBuilder.setTimeout(60);
+  const tx = txBuilder.build();
+
+  const signedXdr = await signWalletTransaction(tx.toXDR(), {
+    address: creatorAddress,
+  });
+
+  const subRes = await fetch(`${stellarConfig.horizonUrl}/transactions`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ tx: signedXdr }).toString(),
+  });
+
+  if (!subRes.ok) {
+    const errJson = (await subRes.json().catch(() => ({}))) as {
+      extras?: { result_codes?: { operations?: string[]; transaction?: string } };
+    };
+    const opCodes = errJson.extras?.result_codes?.operations?.join(", ");
+    const txCode = errJson.extras?.result_codes?.transaction;
+    throw new Error(
+      `Reclaim failed on Stellar network: ${opCodes || txCode || subRes.statusText}`,
     );
   }
 
