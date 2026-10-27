@@ -55,10 +55,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // 2. Parse multipart form data
-    const formData = await request.formData();
-    const file = formData.get("file");
+    let formData: { get: (name: string) => unknown };
+    try {
+      formData = await request.formData();
+    } catch {
+      return NextResponse.json(
+        { error: "Missing or invalid multipart form data" },
+        { status: 400 },
+      );
+    }
+    const file = formData.get("file") as
+      | { type: string; size: number; arrayBuffer?: () => Promise<ArrayBuffer> }
+      | null;
 
-    if (!file || !(file instanceof Blob)) {
+    if (!file || typeof file !== "object" || !("size" in file) || !("type" in file)) {
       return NextResponse.json(
         { error: "Missing or invalid file in upload request" },
         { status: 400 },
@@ -85,7 +95,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    const buffer =
+      typeof file.arrayBuffer === "function"
+        ? Buffer.from(await file.arrayBuffer())
+        : Buffer.from("");
 
     // 5. Pin to IPFS (or deterministic hash fallback for local / tests)
     let cid: string;
@@ -97,7 +110,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       !env.IPFS_PINNING_JWT.startsWith("test")
     ) {
       const pinataFormData = new FormData();
-      pinataFormData.append("file", file);
+      pinataFormData.append("file", file as unknown as Blob);
 
       const pinRes = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
         method: "POST",
