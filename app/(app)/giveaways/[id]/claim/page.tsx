@@ -5,9 +5,18 @@ import Link from "next/link";
 import { useWalletStore } from "@/stores/wallet";
 import { fetchGiveawayById, type GiveawayItem } from "@/lib/giveaways";
 import { checkGiveawayEligibility, type EligibilityReport } from "@/lib/giveaways/eligibility";
+import { executeGiveawayClaim } from "@/lib/giveaways/claim";
+import { explorerTxUrl } from "@/lib/stellar";
 import { EligibilityChecklist } from "@/components/giveaways/EligibilityChecklist";
 import { TurnstileWidget } from "@/components/anti-abuse/TurnstileWidget";
-import { ArrowLeft, Gift, AlertCircle, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Gift,
+  AlertCircle,
+  Loader2,
+  CheckCircle2,
+  ExternalLink,
+} from "lucide-react";
 
 interface ClaimGiveawayPageProps {
   params: Promise<{ id: string }>;
@@ -27,6 +36,12 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
   const [eligibilityLoading, setEligibilityLoading] = useState(false);
 
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const [claimStatus, setClaimStatus] = useState<
+    "idle" | "signing" | "submitting" | "success" | "error"
+  >("idle");
+  const [claimTxHash, setClaimTxHash] = useState<string | null>(null);
+  const [claimError, setClaimError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -77,6 +92,30 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
     };
   }, [address, giveaway]);
 
+  const handleClaim = async () => {
+    if (!address || !giveaway || !turnstileToken) return;
+
+    setClaimStatus("signing");
+    setClaimError(null);
+
+    try {
+      setClaimStatus("submitting");
+      const result = await executeGiveawayClaim({
+        claimerAddress: address,
+        balanceId: giveaway.id,
+        asset: giveaway.asset,
+        needsTrustline:
+          eligibilityReport?.needsTrustline && !eligibilityReport.hasTrustline,
+      });
+
+      setClaimTxHash(result.txHash);
+      setClaimStatus("success");
+    } catch (err) {
+      setClaimStatus("error");
+      setClaimError(err instanceof Error ? err.message : "Claim execution failed");
+    }
+  };
+
   if (loading) {
     return (
       <div className="container max-w-2xl py-12 flex flex-col items-center justify-center min-h-[50vh] gap-3">
@@ -99,6 +138,45 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
           <AlertCircle className="w-8 h-8 text-destructive mx-auto" />
           <h2 className="text-lg font-bold">Unable to claim</h2>
           <p className="text-sm text-muted-foreground">{error || "Giveaway not found"}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Success view
+  if (claimStatus === "success" && claimTxHash) {
+    return (
+      <div className="container max-w-2xl py-12 space-y-6">
+        <div className="p-8 rounded-2xl border bg-card text-center space-y-4">
+          <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center mx-auto">
+            <CheckCircle2 className="w-8 h-8" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold">Claim Successful!</h2>
+            <p className="text-muted-foreground text-sm mt-1">
+              {giveaway.amountPerClaim} {giveaway.asset.code} has been transferred to your wallet.
+            </p>
+          </div>
+
+          <div className="pt-2">
+            <a
+              href={explorerTxUrl(claimTxHash)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline font-medium"
+            >
+              View on Stellar Explorer <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+
+          <div className="pt-4 border-t">
+            <Link
+              href="/giveaways"
+              className="inline-flex py-2.5 px-6 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90"
+            >
+              Browse More Giveaways
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -166,23 +244,51 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
             onError={() => setTurnstileToken(null)}
           />
 
-          {/* Next action step: enabled once eligible and verified */}
+          {claimError && (
+            <div className="p-4 rounded-xl border border-destructive/20 bg-destructive/5 text-sm text-destructive flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <span>{claimError}</span>
+            </div>
+          )}
+
+          {/* Claim Action Button */}
           <div className="pt-2">
             <button
               type="button"
               id="proceed-claim-btn"
-              disabled={!eligibilityReport?.eligible || !turnstileToken}
-              className={`w-full py-3 px-4 rounded-xl font-medium text-sm transition-colors ${
-                eligibilityReport?.eligible && turnstileToken
+              onClick={() => void handleClaim()}
+              disabled={
+                !eligibilityReport?.eligible ||
+                !turnstileToken ||
+                claimStatus === "signing" ||
+                claimStatus === "submitting"
+              }
+              className={`w-full py-3 px-4 rounded-xl font-medium text-sm transition-colors flex items-center justify-center gap-2 ${
+                eligibilityReport?.eligible &&
+                turnstileToken &&
+                claimStatus !== "signing" &&
+                claimStatus !== "submitting"
                   ? "bg-primary text-primary-foreground hover:bg-primary/90"
                   : "bg-muted text-muted-foreground cursor-not-allowed"
               }`}
             >
-              {!turnstileToken
-                ? "Complete verification to proceed"
-                : !eligibilityReport?.eligible
-                  ? "Wallet not eligible"
-                  : "Proceed to Claim"}
+              {claimStatus === "signing" ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Waiting for wallet signature...</span>
+                </>
+              ) : claimStatus === "submitting" ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Confirming transaction on Stellar...</span>
+                </>
+              ) : !turnstileToken ? (
+                "Complete verification to proceed"
+              ) : !eligibilityReport?.eligible ? (
+                "Wallet not eligible"
+              ) : (
+                "Claim Giveaway"
+              )}
             </button>
           </div>
         </>
