@@ -10,7 +10,7 @@ import { Money } from "@/components/ui/Money";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { stellarConfig, explorerAccountUrl } from "@/lib/stellar";
+import { stellarConfig } from "@/lib/stellar";
 import { signWalletTransaction } from "@/lib/wallet-kit";
 
 // ── Horizon types ─────────────────────────────────────────────────────────

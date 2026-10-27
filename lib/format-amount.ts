@@ -4,8 +4,6 @@
  * imports what it needs.
  */
 
-import { ValidationError } from "@/lib/errors";
-
 export function formatAmount(
   value: bigint,
   decimals: number = 7,
@@ -31,7 +29,6 @@ export function formatAmount(
 
   if (displayDecimals !== undefined && displayDecimals < decimals) {
     // Round to displayDecimals.
-    const factor = 10 ** (decimals - displayDecimals);
     const rounded = Number(absolute) / (10 ** decimals);
     const display = rounded.toFixed(displayDecimals);
     return negative ? `-${display}` : display;
