@@ -72,7 +72,7 @@ export async function fetchGiveaways(account?: string | null): Promise<GiveawayI
       ? `${stellarConfig.horizonUrl}/claimable_balances?claimant=${account}&order=desc&limit=20`
       : `${stellarConfig.horizonUrl}/claimable_balances?order=desc&limit=20`;
 
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(3000) });
     if (!res.ok) {
       return mockGiveaways;
     }

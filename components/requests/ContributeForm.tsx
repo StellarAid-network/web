@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { parseAmount } from "@stellar-aid/sdk";
 import { AlertCircle, CheckCircle2, Info, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -197,7 +198,14 @@ export function ContributeForm({
             <p className="leading-relaxed text-muted-foreground">
               Funds are held in on-chain Soroban escrow—never by StellarAid servers or moderators.
               If the fundraising goal is not reached by the deadline, or if the request is cancelled
-              or disputed, you can claim a 100% refund directly from the smart contract.
+              or disputed, you can claim a 100% refund directly from the smart contract.{" "}
+              <Link
+                href="/safety"
+                className="font-medium text-emerald-800 underline underline-offset-2 dark:text-emerald-300"
+              >
+                Read the Safety Guide
+              </Link>
+              .
             </p>
           </div>
 

@@ -57,6 +57,7 @@ test.describe("Day 6: Social Journey (post -> comment -> report) & Profiles", ()
 test.describe("Day 6: WCAG 2.1 AA Accessibility (axe-core)", () => {
   const keyRoutes = [
     "/",
+    "/safety",
     "/feed",
     "/giveaways",
     "/requests",

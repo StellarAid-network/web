@@ -59,7 +59,7 @@
 | Forms and validation | React Hook Form + zod |
 | Wallets | `@creit.tech/stellar-wallets-kit` |
 | Chain access | `@stellar-aid/sdk` (wraps `@stellar/stellar-sdk`) |
-| Backend | [`api`](https://github.com/stellar-aid/api) through a generated, typed OpenAPI client |
+| Backend | [`api`](https://github.com/StellarAid-network/api) through a generated, typed OpenAPI client |
 | Bot protection | Cloudflare Turnstile |
 | Tests | Vitest, Testing Library, Playwright |
 | Hosting | Vercel |
@@ -96,14 +96,14 @@ Principles:
 - Node.js 20+
 - pnpm 9+
 - A Stellar wallet extension such as [Freighter](https://www.freighter.app/), set to **Testnet**
-- A running [`api`](https://github.com/stellar-aid/api) instance (local or hosted), unless using the mock mode below
+- A running [`api`](https://github.com/StellarAid-network/api) instance (local or hosted), unless using the mock mode below
 
 ---
 
 ## Getting started
 
 ```bash
-git clone https://github.com/stellar-aid/web.git
+git clone https://github.com/StellarAid-network/web.git
 cd web
 pnpm install
 
@@ -181,24 +181,31 @@ web/
 │   ├── layout.tsx
 │   └── providers.tsx             # Query, wallet, theme providers
 ├── components/
-│   ├── ui/                       # shadcn/ui primitives
-│   ├── wallet/                   # ConnectButton, NetworkBadge, SignModal
-│   ├── giveaways/
-│   ├── requests/                 # GoalProgress, MilestoneList, ContributeForm
-│   ├── social/                   # PostCard, CommentThread, ReportDialog
+│   ├── ui/                       # shadcn/ui primitives + Money, Address
+│   ├── wallet/                   # ConnectButton, NetworkBadge, NetworkMismatchBanner
+│   ├── giveaways/                # CreateGiveawayForm, GiveawayCard, GiveawayReviewModal, EligibilityChecklist
+│   ├── requests/                 # GoalProgress, MilestoneList, ContributeForm, CreateRequestForm, RequestCard
+│   ├── social/                   # FeedTimeline, PostCard, CommentThread, ProfileView, ReportDialog
 │   └── trust/                    # ReputationBadge, AttestationChip
-├── hooks/                        # useWallet, useGiveaways, useRequest, useSubmitTx ...
+├── hooks/                        # use-wallet, use-session, use-toast
 ├── lib/
 │   ├── stellar.ts                # SDK instance and config
 │   ├── api-client/               # Generated OpenAPI client (do not edit)
 │   ├── wallet-kit.ts             # Wallets Kit setup
-│   ├── ipfs.ts
+│   ├── i18n.ts                   # next-intl message loader (messages/*.json)
+│   ├── sanitize.ts               # Safe text / URL sanitization helpers
+│   ├── giveaways.ts              # Claimable-balance & eligibility helpers
+│   ├── requests.ts               # Help request & Soroban simulation helpers
+│   ├── social.ts                 # Feed, profile, comment, and report fetchers
 │   └── format.ts                 # Amounts, dates, addresses
+├── messages/                     # Locale catalogs (en complete; ha, yo, ig, fr, es targets)
+├── docs/                         # performance.md, CONTRIBUTING-web.md, backlog.md
 ├── stores/                       # Zustand stores
 ├── styles/
 ├── public/
-├── e2e/                          # Playwright tests
+├── e2e/                          # Playwright + axe-core WCAG 2.1 AA tests
 ├── tests/                        # Vitest tests
+├── vercel.json                   # Vercel preview/production deployment config
 ├── .env.example
 └── next.config.ts
 ```
@@ -301,9 +308,9 @@ pnpm gen:api     # fetches the spec from NEXT_PUBLIC_API_URL and regenerates lib
 | `pnpm start` | Serve the production build |
 | `pnpm lint` | ESLint |
 | `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm format` | Prettier |
+| `pnpm format` / `pnpm format:check` | Prettier write / check |
 | `pnpm test` | Vitest unit and component tests |
-| `pnpm test:e2e` | Playwright end-to-end tests |
+| `pnpm test:e2e` | Playwright end-to-end & `axe` accessibility tests (`PLAYWRIGHT_RUN=true pnpm test:e2e`) |
 | `pnpm gen:api` | Regenerate the API client |
 | `pnpm analyze` | Bundle analysis |
 
@@ -354,7 +361,7 @@ Hosting `/.well-known/stellar.toml` (with CORS enabled) is required for SEP-10 a
 - Server Components by default, and client components only where interaction needs them.
 - Subpath SDK imports so server-only code never reaches the client bundle.
 - Images through `next/image` with IPFS gateway allowlisting.
-- Paginate and virtualize long feeds.
+- Paginate and virtualize long feeds (see [docs/performance.md](./docs/performance.md) for mobile Core Web Vitals baselines).
 
 **Security**
 
@@ -364,7 +371,7 @@ Hosting `/.well-known/stellar.toml` (with CORS enabled) is required for SEP-10 a
 - Verify Turnstile tokens and rate-limit upload routes.
 - Dependencies are monitored by Dependabot or Renovate.
 
-Report vulnerabilities privately: [SECURITY.md](https://github.com/stellar-aid/.github/blob/main/SECURITY.md).
+Report vulnerabilities privately: [SECURITY.md](https://github.com/StellarAid-network/.github/blob/main/SECURITY.md).
 
 ---
 
@@ -384,13 +391,13 @@ Report vulnerabilities privately: [SECURITY.md](https://github.com/stellar-aid/.
 
 ## Contributing
 
-1. Pick an issue or open one. UI changes should include screenshots or a short recording.
+1. Pick an issue from [docs/backlog.md](./docs/backlog.md) or open one. UI changes should include screenshots or a short recording.
 2. Branch from `main`, and keep PRs focused.
-3. Run `pnpm lint typecheck test` before pushing.
+3. Run `pnpm lint && pnpm typecheck && pnpm test` before pushing.
 4. Follow Conventional Commits and the PR template.
 5. Changes that need a new SDK or API capability should link the related PR in that repo.
 
-See the org [Contributing guide](https://github.com/stellar-aid/.github/blob/main/CONTRIBUTING.md).
+See [docs/CONTRIBUTING-web.md](./docs/CONTRIBUTING-web.md) and the org [Contributing guide](https://github.com/StellarAid-network/.github/blob/main/CONTRIBUTING.md).
 
 ---
 
