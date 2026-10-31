@@ -1,0 +1,97 @@
+{
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "mainNavigation": "Primary navigation",
+    "feedTimeline": "Community timeline",
+    "virtualizedFeed": "Scrollable community posts"
+  },
+  "nav": {
+    "brand": "StellarAid",
+    "feed": "Feed",
+    "giveaways": "Giveaways",
+    "requests": "Requests"
+  },
+  "feed": {
+    "title": "Community feed",
+    "subtitle": "Updates from giveaways, help requests, and mutual aid contributors across Stellar.",
+    "globalTab": "Global",
+    "followingTab": "Following",
+    "composerLabel": "Share an update with the community",
+    "composerPlaceholder": "Share a progress update, thank contributors, or link a request (#education, #health)…",
+    "postAction": "Publish post",
+    "postingAction": "Publishing…",
+    "emptyGlobal": "No community posts yet. Share the first update above!",
+    "emptyFollowing": "No posts from followed accounts yet. Visit a profile to follow community members.",
+    "loadMore": "Load older posts",
+    "showingWindow": "Showing {visible} of {total} posts",
+    "hiddenPlaceholder": "This content has been hidden by community moderators. On-chain escrow balances and refunds are never affected."
+  },
+  "post": {
+    "commentsToggle": "{count, plural, =0 {Comments} one {# comment} other {# comments}}",
+    "deletePost": "Delete post",
+    "mediaAlt": "Post attachment {index}",
+    "hiddenComment": "This comment has been hidden by community moderators."
+  },
+  "comments": {
+    "heading": "Discussion",
+    "inputLabel": "Write a comment",
+    "inputPlaceholder": "Write a constructive reply…",
+    "submit": "Post comment",
+    "submitting": "Posting…",
+    "empty": "No comments yet. Start the conversation."
+  },
+  "profile": {
+    "defaultName": "Stellar Community Member",
+    "noBio": "No bio added yet.",
+    "followers": "{count, plural, one {# follower} other {# followers}}",
+    "following": "{count} following",
+    "follow": "Follow",
+    "followingState": "Following",
+    "unfollow": "Unfollow",
+    "editProfile": "Edit profile",
+    "editDialogTitle": "Edit public profile",
+    "editDialogDescription": "Update your off-chain display name, bio, and IPFS avatar.",
+    "displayNameLabel": "Display name",
+    "bioLabel": "Bio",
+    "avatarLabel": "Avatar image (IPFS)",
+    "uploadingAvatar": "Pinning avatar to IPFS…",
+    "saveChanges": "Save profile",
+    "savingChanges": "Saving…",
+    "cancel": "Cancel",
+    "savedToast": "Profile updated.",
+    "postsSection": "Recent posts",
+    "contributionsSection": "Public on-chain contributions",
+    "noContributions": "No indexed contributions for this address yet.",
+    "attestationsSection": "Verified attestations",
+    "noAttestations": "No active third-party attestations on-chain."
+  },
+  "trust": {
+    "reputationLabel": "Reputation {score}",
+    "reputationTooltip": "On-chain reputation score ({score}) derived from verified milestones and contributions.",
+    "tierNew": "New member",
+    "tierActive": "Trusted helper",
+    "tierSteward": "Community steward",
+    "attestationVerifiedNeed": "Verified need",
+    "attestationCommunityOrg": "Community org",
+    "attestationIdentityCheck": "Identity attested",
+    "attestationGeneric": "Attested ({kind})",
+    "attestedBy": "Attested on-chain by {attestor}",
+    "hiddenRequestDescription": "This off-chain description was hidden after moderation review. All on-chain escrow funds, milestones, and refunds remain active and unaffected."
+  },
+  "report": {
+    "triggerLabel": "Report",
+    "dialogTitle": "Report {targetType}",
+    "dialogDescription": "Reports are reviewed by moderators. Moderation only affects off-chain visibility and can never freeze, move, or redirect on-chain funds.",
+    "reasonCategoryLabel": "Category",
+    "categorySpam": "Spam or automated abuse",
+    "categoryScam": "Misleading claim or impersonation",
+    "categoryHarassment": "Harassment or harmful content",
+    "categoryOther": "Other policy concern",
+    "detailsLabel": "Details",
+    "detailsPlaceholder": "Describe why this content should be reviewed (minimum 5 characters)…",
+    "submit": "Submit report",
+    "submitting": "Submitting…",
+    "submittedBanner": "Thank you. Your report has been queued for moderator review.",
+    "cancel": "Cancel"
+  }
+}

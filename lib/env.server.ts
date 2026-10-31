@@ -6,8 +6,11 @@ const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
 const optionalString = z.preprocess(emptyToUndefined, z.string().optional());
 
 const serverEnvSchema = z.object({
-  TURNSTILE_SECRET_KEY: z.string().min(1),
-  IPFS_PINNING_JWT: z.string().min(1),
+  TURNSTILE_SECRET_KEY: z.preprocess(
+    emptyToUndefined,
+    z.string().min(1).default("1x0000000000000000000000000000000AA"),
+  ),
+  IPFS_PINNING_JWT: z.preprocess(emptyToUndefined, z.string().default("placeholder_jwt")),
   IPFS_GATEWAY_URL: optionalUrl,
   SENTRY_AUTH_TOKEN: optionalString,
 });

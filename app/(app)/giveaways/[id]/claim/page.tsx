@@ -9,14 +9,7 @@ import { executeGiveawayClaim } from "@/lib/giveaways/claim";
 import { explorerTxUrl } from "@/lib/stellar";
 import { EligibilityChecklist } from "@/components/giveaways/EligibilityChecklist";
 import { TurnstileWidget } from "@/components/anti-abuse/TurnstileWidget";
-import {
-  ArrowLeft,
-  Gift,
-  AlertCircle,
-  Loader2,
-  CheckCircle2,
-  ExternalLink,
-} from "lucide-react";
+import { ArrowLeft, Gift, AlertCircle, Loader2, CheckCircle2, ExternalLink } from "lucide-react";
 
 interface ClaimGiveawayPageProps {
   params: Promise<{ id: string }>;
@@ -104,8 +97,7 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
         claimerAddress: address,
         balanceId: giveaway.id,
         asset: giveaway.asset,
-        needsTrustline:
-          eligibilityReport?.needsTrustline && !eligibilityReport.hasTrustline,
+        needsTrustline: eligibilityReport?.needsTrustline && !eligibilityReport.hasTrustline,
       });
 
       setClaimTxHash(result.txHash);
@@ -118,24 +110,24 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
 
   if (loading) {
     return (
-      <div className="container max-w-2xl py-12 flex flex-col items-center justify-center min-h-[50vh] gap-3">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-muted-foreground text-sm">Loading giveaway details...</p>
+      <div className="container flex min-h-[50vh] max-w-2xl flex-col items-center justify-center gap-3 py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground">Loading giveaway details...</p>
       </div>
     );
   }
 
   if (error || !giveaway) {
     return (
-      <div className="container max-w-2xl py-12 space-y-4">
+      <div className="container max-w-2xl space-y-4 py-12">
         <Link
           href="/giveaways"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Giveaways
+          <ArrowLeft className="h-4 w-4" /> Back to Giveaways
         </Link>
-        <div className="p-6 rounded-2xl border border-destructive/20 bg-destructive/5 text-center space-y-3">
-          <AlertCircle className="w-8 h-8 text-destructive mx-auto" />
+        <div className="space-y-3 rounded-2xl border border-destructive/20 bg-destructive/5 p-6 text-center">
+          <AlertCircle className="mx-auto h-8 w-8 text-destructive" />
           <h2 className="text-lg font-bold">Unable to claim</h2>
           <p className="text-sm text-muted-foreground">{error || "Giveaway not found"}</p>
         </div>
@@ -146,14 +138,14 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
   // Success view
   if (claimStatus === "success" && claimTxHash) {
     return (
-      <div className="container max-w-2xl py-12 space-y-6">
-        <div className="p-8 rounded-2xl border bg-card text-center space-y-4">
-          <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center mx-auto">
-            <CheckCircle2 className="w-8 h-8" />
+      <div className="container max-w-2xl space-y-6 py-12">
+        <div className="space-y-4 rounded-2xl border bg-card p-8 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
+            <CheckCircle2 className="h-8 w-8" />
           </div>
           <div>
             <h2 className="text-2xl font-bold">Claim Successful!</h2>
-            <p className="text-muted-foreground text-sm mt-1">
+            <p className="mt-1 text-sm text-muted-foreground">
               {giveaway.amountPerClaim} {giveaway.asset.code} has been transferred to your wallet.
             </p>
           </div>
@@ -163,16 +155,16 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
               href={explorerTxUrl(claimTxHash)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline font-medium"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
             >
-              View on Stellar Explorer <ExternalLink className="w-4 h-4" />
+              View on Stellar Explorer <ExternalLink className="h-4 w-4" />
             </a>
           </div>
 
-          <div className="pt-4 border-t">
+          <div className="border-t pt-4">
             <Link
               href="/giveaways"
-              className="inline-flex py-2.5 px-6 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90"
+              className="inline-flex rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
               Browse More Giveaways
             </Link>
@@ -183,17 +175,17 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
   }
 
   return (
-    <div className="container max-w-2xl py-8 space-y-6">
+    <div className="container max-w-2xl space-y-6 py-8">
       <Link
         href={`/giveaways/${id}`}
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to Giveaway
+        <ArrowLeft className="h-4 w-4" /> Back to Giveaway
       </Link>
 
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-          <Gift className="w-6 h-6" />
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <Gift className="h-6 w-6" />
         </div>
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Claim Giveaway</h1>
@@ -204,14 +196,14 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
       </div>
 
       {/* Giveaway Summary Card */}
-      <div className="p-5 rounded-2xl border bg-card space-y-3">
+      <div className="space-y-3 rounded-2xl border bg-card p-5">
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Claim Amount</span>
           <span className="text-xl font-bold text-foreground">
             {giveaway.amountPerClaim} {giveaway.asset.code}
           </span>
         </div>
-        <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
+        <div className="flex items-center justify-between border-t pt-2 text-xs text-muted-foreground">
           <span>Creator</span>
           <span className="font-mono">
             {giveaway.creator.slice(0, 6)}...{giveaway.creator.slice(-4)}
@@ -219,16 +211,22 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
         </div>
       </div>
 
+      {/* Turnstile Bot Protection */}
+      <TurnstileWidget
+        onVerified={(token) => setTurnstileToken(token)}
+        onError={() => setTurnstileToken(null)}
+      />
+
       {/* Wallet Connection check */}
       {!isConnected ? (
-        <div className="p-6 rounded-2xl border bg-muted/30 text-center space-y-3">
+        <div className="space-y-3 rounded-2xl border bg-muted/30 p-6 text-center">
           <p className="text-sm text-muted-foreground">
             Please connect your Stellar wallet to verify your eligibility and claim.
           </p>
           <button
             type="button"
             onClick={() => void connect()}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:bg-primary/90"
+            className="rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             Connect Wallet
           </button>
@@ -238,15 +236,9 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
           {/* Eligibility Checklist */}
           <EligibilityChecklist report={eligibilityReport} loading={eligibilityLoading} />
 
-          {/* Turnstile Bot Protection */}
-          <TurnstileWidget
-            onVerified={(token) => setTurnstileToken(token)}
-            onError={() => setTurnstileToken(null)}
-          />
-
           {claimError && (
-            <div className="p-4 rounded-xl border border-destructive/20 bg-destructive/5 text-sm text-destructive flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+            <div className="flex items-center gap-2 rounded-xl border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive">
+              <AlertCircle className="h-5 w-5 flex-shrink-0" />
               <span>{claimError}</span>
             </div>
           )}
@@ -263,23 +255,23 @@ export default function ClaimGiveawayPage({ params }: ClaimGiveawayPageProps): R
                 claimStatus === "signing" ||
                 claimStatus === "submitting"
               }
-              className={`w-full py-3 px-4 rounded-xl font-medium text-sm transition-colors flex items-center justify-center gap-2 ${
+              className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                 eligibilityReport?.eligible &&
                 turnstileToken &&
                 claimStatus !== "signing" &&
                 claimStatus !== "submitting"
                   ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                  : "bg-muted text-muted-foreground cursor-not-allowed"
+                  : "cursor-not-allowed bg-muted text-muted-foreground"
               }`}
             >
               {claimStatus === "signing" ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   <span>Waiting for wallet signature...</span>
                 </>
               ) : claimStatus === "submitting" ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   <span>Confirming transaction on Stellar...</span>
                 </>
               ) : !turnstileToken ? (

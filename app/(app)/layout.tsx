@@ -11,7 +11,9 @@ export default function AppLayout({
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
       <NetworkMismatchBanner />
-      <main className="flex-1 pb-20 md:pb-8">{children}</main>
+      <main id="main-content" tabIndex={-1} className="flex-1 pb-20 md:pb-8">
+        {children}
+      </main>
       <BottomNav />
     </div>
   );

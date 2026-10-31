@@ -48,8 +48,7 @@ export function MilestoneList({
     <div className="space-y-4" data-testid="milestone-list">
       {milestones.map((m) => {
         const isCreator =
-          !currentUserAddress ||
-          currentUserAddress.toLowerCase() === creatorAddress.toLowerCase();
+          !currentUserAddress || currentUserAddress.toLowerCase() === creatorAddress.toLowerCase();
         const isApprover =
           !currentUserAddress || currentUserAddress.toLowerCase() === m.approver.toLowerCase();
 
@@ -59,18 +58,18 @@ export function MilestoneList({
         return (
           <div
             key={m.index}
-            className="rounded-lg border bg-card p-4 space-y-3"
+            className="space-y-3 rounded-lg border bg-card p-4"
             data-testid={`milestone-item-${m.index}`}
           >
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono uppercase text-muted-foreground">
+                  <span className="font-mono text-xs uppercase text-muted-foreground">
                     Milestone #{m.index + 1}
                   </span>
                   <MilestoneStatusBadge status={m.status} />
                 </div>
-                <h4 className="font-semibold text-sm">{m.title}</h4>
+                <h4 className="text-sm font-semibold">{m.title}</h4>
               </div>
 
               <div className="text-right">
@@ -108,7 +107,7 @@ export function MilestoneList({
                           [m.index]: e.target.value,
                         }))
                       }
-                      className="h-8 text-xs font-mono"
+                      className="h-8 font-mono text-xs"
                       disabled={isBusy}
                     />
                     <Button
@@ -118,7 +117,7 @@ export function MilestoneList({
                       disabled={isBusy || evidenceVal.trim().length === 0}
                       onClick={() => void onSubmitEvidence(m.index, evidenceVal)}
                       data-testid={`submit-milestone-${m.index}`}
-                      className="gap-1.5 shrink-0"
+                      className="shrink-0 gap-1.5"
                     >
                       <Send className="h-3.5 w-3.5" />
                       Submit evidence

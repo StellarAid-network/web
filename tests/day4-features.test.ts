@@ -10,10 +10,7 @@ import {
   ALLOWED_MIME_TYPES,
   MAX_FILE_SIZE_BYTES,
 } from "@/app/api/upload/route";
-import {
-  checkGiveawayEligibility,
-  getReputationScore,
-} from "@/lib/giveaways/eligibility";
+import { checkGiveawayEligibility, getReputationScore } from "@/lib/giveaways/eligibility";
 import type { GiveawayItem } from "@/lib/giveaways";
 import * as fs from "node:fs";
 import * as path from "node:path";
@@ -110,8 +107,7 @@ describe("Day 4 Features: IPFS Upload Route Skeleton", () => {
             ? {
                 type: "image/png",
                 size: 200,
-                arrayBuffer: async () =>
-                  new Uint8Array([137, 80, 78, 71, 1, 2, 3]).buffer,
+                arrayBuffer: async () => new Uint8Array([137, 80, 78, 71, 1, 2, 3]).buffer,
               }
             : null,
       }),
@@ -202,7 +198,9 @@ describe("Day 4 Features: Giveaway Eligibility & Reputation", () => {
   });
 
   it("returns reputation score for accounts", async () => {
-    const score = await getReputationScore("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ");
+    const score = await getReputationScore(
+      "GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ",
+    );
     expect(typeof score).toBe("number");
     expect(score).toBeGreaterThan(0);
   });

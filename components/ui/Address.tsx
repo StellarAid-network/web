@@ -44,10 +44,12 @@ export function Address({
         type="button"
         onClick={() => void handleCopy()}
         aria-label="Copy address to clipboard"
-        className="text-muted-foreground hover:text-foreground transition-colors"
+        className="text-muted-foreground transition-colors hover:text-foreground"
       >
         {copied ? (
-          <span className="text-xs text-green-600" aria-live="polite">Copied</span>
+          <span className="text-xs text-green-600" aria-live="polite">
+            Copied
+          </span>
         ) : (
           <Copy className="h-3 w-3" />
         )}
@@ -58,7 +60,7 @@ export function Address({
           target="_blank"
           rel="noopener noreferrer"
           aria-label="View on Stellar Explorer"
-          className="text-muted-foreground hover:text-foreground transition-colors"
+          className="text-muted-foreground transition-colors hover:text-foreground"
         >
           <ExternalLink className="h-3 w-3" />
         </a>

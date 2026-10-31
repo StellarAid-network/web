@@ -18,7 +18,7 @@ export function SiteHeader(): React.ReactElement {
           <Link href="/" className="text-lg font-bold tracking-tight">
             StellarAid
           </Link>
-          <nav className="hidden items-center gap-4 md:flex">
+          <nav aria-label="Primary navigation" className="hidden items-center gap-4 md:flex">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}

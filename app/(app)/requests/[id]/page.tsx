@@ -9,18 +9,25 @@ import {
   ArrowLeft,
   CheckCircle2,
   Coins,
+  EyeOff,
   RotateCcw,
   ShieldCheck,
   XCircle,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Address } from "@/components/ui/Address";
 import { Money } from "@/components/ui/Money";
+import { ReportDialog } from "@/components/social/ReportDialog";
+import { AttestationChip } from "@/components/trust/AttestationChip";
+import { ReputationBadge } from "@/components/trust/ReputationBadge";
 import { useWallet } from "@/hooks/use-wallet";
 import { formatDate } from "@/lib/format";
+import { sanitizeUserText } from "@/lib/sanitize";
+import { fetchAttestations, fetchReputationSummary } from "@/lib/social";
 import {
   approveMilestone,
   claimRefund,
@@ -52,6 +59,20 @@ export default function RequestDetailPage(): React.ReactElement {
   } = useQuery({
     queryKey: ["help-request", requestId],
     queryFn: () => fetchHelpRequestById(requestId),
+  });
+
+  const tTrust = useTranslations("trust");
+
+  const { data: creatorRep } = useQuery({
+    queryKey: ["reputation", request?.creator],
+    queryFn: () => fetchReputationSummary(request?.creator ?? ""),
+    enabled: Boolean(request?.creator),
+  });
+
+  const { data: requestAttestations = [] } = useQuery({
+    queryKey: ["attestations", requestId],
+    queryFn: () => fetchAttestations(requestId),
+    enabled: Boolean(requestId),
   });
 
   const handleRefresh = async () => {
@@ -195,9 +216,7 @@ export default function RequestDetailPage(): React.ReactElement {
   }
 
   const isRefundEligibleStatus =
-    request.status === "Failed" ||
-    request.status === "Cancelled" ||
-    request.status === "Disputed";
+    request.status === "Failed" || request.status === "Cancelled" || request.status === "Disputed";
   const hasUnrefundedContributions = request.contributions.some((c) => !c.refunded);
 
   return (
@@ -210,7 +229,7 @@ export default function RequestDetailPage(): React.ReactElement {
           </Button>
         </Link>
 
-        <span className="text-xs font-mono text-muted-foreground">
+        <span className="font-mono text-xs text-muted-foreground">
           On-Chain Escrow #{request.onChainId}
         </span>
       </div>
@@ -221,10 +240,10 @@ export default function RequestDetailPage(): React.ReactElement {
           data-testid="hash-mismatch-warning"
           className="flex items-start gap-3 rounded-lg border border-destructive bg-destructive/10 p-4 text-sm text-destructive"
         >
-          <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" />
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
           <div>
             <p className="font-semibold">Content Hash Mismatch Detected</p>
-            <p className="text-xs mt-0.5">
+            <p className="mt-0.5 text-xs">
               The off-chain title or description does not match the immutable SHA-256 content_hash
               recorded on-chain. Always rely on on-chain escrow parameters (goal, token, milestones,
               deadline).
@@ -255,32 +274,51 @@ export default function RequestDetailPage(): React.ReactElement {
       <Card>
         <CardHeader className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span>Created by</span>
               <Address value={request.creator} href />
+              {creatorRep && <ReputationBadge score={creatorRep.score} showTier={false} />}
             </div>
-            <span>Created {formatDate(request.createdAt)}</span>
+            <div className="flex items-center gap-2">
+              <span>Created {formatDate(request.createdAt)}</span>
+              <ReportDialog
+                targetType="REQUEST"
+                targetId={request.id}
+                testId="report-request-button"
+              />
+            </div>
           </div>
 
-          <CardTitle className="text-2xl">{request.title}</CardTitle>
+          <CardTitle className="text-2xl">{sanitizeUserText(request.title, 200)}</CardTitle>
 
-          {request.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {request.tags.map((tag) => (
-                <Badge key={tag} variant="outline" className="text-xs font-normal">
-                  #{tag}
-                </Badge>
-              ))}
-            </div>
-          )}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {requestAttestations.map((att) => (
+              <AttestationChip key={att.id} kind={att.kind} attestor={att.attestor} />
+            ))}
+            {request.tags.map((tag) => (
+              <Badge key={tag} variant="outline" className="text-xs font-normal">
+                #{sanitizeUserText(tag, 32)}
+              </Badge>
+            ))}
+          </div>
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-line">
-            {request.description}
-          </p>
+          {request.hidden ? (
+            <div
+              data-testid="hidden-request-description"
+              className="flex items-center gap-2.5 rounded-md border border-dashed bg-muted/40 p-4 text-sm text-muted-foreground"
+            >
+              <EyeOff className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <span>{tTrust("hiddenRequestDescription")}</span>
+            </div>
+          ) : (
+            <p className="whitespace-pre-line text-sm leading-relaxed text-foreground/90">
+              {sanitizeUserText(request.description, 4000)}
+            </p>
+          )}
 
-          <div className="rounded-lg border bg-muted/30 p-4 space-y-4">
+          <div className="space-y-4 rounded-lg border bg-muted/30 p-4">
             <GoalProgress
               raised={request.raised}
               goal={request.goal}
@@ -289,7 +327,7 @@ export default function RequestDetailPage(): React.ReactElement {
               deadline={request.deadline}
             />
 
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t text-xs text-muted-foreground">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
                 <span>On-chain SHA-256:</span>
@@ -369,16 +407,14 @@ export default function RequestDetailPage(): React.ReactElement {
       {/* Contribution History Section */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">
-            Contributions ({request.contributions.length})
-          </CardTitle>
+          <CardTitle className="text-lg">Contributions ({request.contributions.length})</CardTitle>
           <CardDescription>
             Verifiable Soroban escrow deposits recorded on the Stellar ledger.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {request.contributions.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-4 text-center">
+            <p className="py-4 text-center text-sm text-muted-foreground">
               No contributions yet. Be the first to support this request!
             </p>
           ) : (
@@ -390,9 +426,7 @@ export default function RequestDetailPage(): React.ReactElement {
                 >
                   <div className="flex items-center gap-2">
                     <Address value={c.contributor} />
-                    <span className="text-xs text-muted-foreground">
-                      {formatDate(c.createdAt)}
-                    </span>
+                    <span className="text-xs text-muted-foreground">{formatDate(c.createdAt)}</span>
                   </div>
 
                   <div className="flex items-center gap-2">

@@ -34,7 +34,9 @@ export function TurnstileWidget({
   className = "",
 }: TurnstileWidgetProps): React.ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [status, setStatus] = useState<"idle" | "loading" | "verifying" | "verified" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "verifying" | "verified" | "error">(
+    "idle",
+  );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleClientToken = useCallback(
@@ -47,7 +49,11 @@ export function TurnstileWidget({
           body: JSON.stringify({ token }),
         });
 
-        const data = (await res.json()) as { success: boolean; verifiedToken?: string; error?: string };
+        const data = (await res.json()) as {
+          success: boolean;
+          verifiedToken?: string;
+          error?: string;
+        };
 
         if (res.ok && data.success && data.verifiedToken) {
           setStatus("verified");
@@ -124,23 +130,23 @@ export function TurnstileWidget({
   }, [handleClientToken]);
 
   return (
-    <div className={`p-4 border rounded-xl bg-card text-card-foreground ${className}`}>
-      <div className="flex items-center gap-2 mb-3">
-        <ShieldCheck className="w-5 h-5 text-primary" />
+    <div className={`rounded-xl border bg-card p-4 text-card-foreground ${className}`}>
+      <div className="mb-3 flex items-center gap-2">
+        <ShieldCheck className="h-5 w-5 text-primary" />
         <span className="text-sm font-medium">Bot Protection & Sybil Verification</span>
       </div>
 
-      <div ref={containerRef} className="min-h-[65px] flex items-center justify-center">
+      <div ref={containerRef} className="flex min-h-[65px] items-center justify-center">
         {status === "verifying" && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
             <span>Verifying human challenge...</span>
           </div>
         )}
 
         {status === "verified" && (
-          <div className="flex items-center gap-2 text-sm text-emerald-600 font-medium">
-            <ShieldCheck className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-sm font-medium text-emerald-600">
+            <ShieldCheck className="h-4 w-4" />
             <span>Verified human. You may proceed.</span>
           </div>
         )}
@@ -148,13 +154,13 @@ export function TurnstileWidget({
         {status === "error" && (
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 text-sm text-destructive">
-              <AlertCircle className="w-4 h-4" />
+              <AlertCircle className="h-4 w-4" />
               <span>{errorMessage || "Verification failed"}</span>
             </div>
             <button
               type="button"
               onClick={() => void handleClientToken("test-turnstile-token")}
-              className="text-xs text-primary underline text-left"
+              className="text-left text-xs text-primary underline"
             >
               Retry verification
             </button>
@@ -169,7 +175,7 @@ export function TurnstileWidget({
             type="button"
             data-testid="turnstile-mock-verify-btn"
             onClick={() => void handleClientToken("test-turnstile-token")}
-            className="text-xs text-muted-foreground hover:text-foreground underline"
+            className="text-xs text-muted-foreground underline hover:text-foreground"
           >
             Click here to verify in test environment
           </button>

@@ -29,7 +29,7 @@ export function formatAmount(
 
   if (displayDecimals !== undefined && displayDecimals < decimals) {
     // Round to displayDecimals.
-    const rounded = Number(absolute) / (10 ** decimals);
+    const rounded = Number(absolute) / 10 ** decimals;
     const display = rounded.toFixed(displayDecimals);
     return negative ? `-${display}` : display;
   }

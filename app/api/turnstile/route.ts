@@ -53,14 +53,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     formData.append("secret", env.TURNSTILE_SECRET_KEY);
     formData.append("response", body.token);
 
-    const cfResponse = await fetch(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: formData.toString(),
-      },
-    );
+    const cfResponse = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: formData.toString(),
+    });
 
     if (!cfResponse.ok) {
       return NextResponse.json(

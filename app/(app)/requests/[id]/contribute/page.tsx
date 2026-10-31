@@ -86,8 +86,7 @@ export default function ContributeRequestPage(): React.ReactElement {
     );
   }
 
-  const displayedRaised =
-    optimisticRaised !== null ? optimisticRaised.toString() : request.raised;
+  const displayedRaised = optimisticRaised !== null ? optimisticRaised.toString() : request.raised;
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 p-4">
@@ -101,7 +100,7 @@ export default function ContributeRequestPage(): React.ReactElement {
       </div>
 
       <Card>
-        <CardContent className="pt-6 space-y-3">
+        <CardContent className="space-y-3 pt-6">
           <h1 className="text-xl font-bold">{request.title}</h1>
           <GoalProgress
             raised={displayedRaised}

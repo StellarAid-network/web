@@ -24,17 +24,10 @@ export interface ClaimResult {
  * Builds and submits a claim transaction, automatically bundling a changeTrust operation
  * if the user needs a trustline for non-native assets.
  */
-export async function executeGiveawayClaim(
-  options: ClaimExecutionOptions,
-): Promise<ClaimResult> {
+export async function executeGiveawayClaim(options: ClaimExecutionOptions): Promise<ClaimResult> {
   const { claimerAddress, balanceId, asset, needsTrustline } = options;
 
-  const {
-    TransactionBuilder,
-    Asset,
-    Account,
-    Operation,
-  } = await import("@stellar/stellar-sdk");
+  const { TransactionBuilder, Asset, Account, Operation } = await import("@stellar/stellar-sdk");
 
   // 1. Fetch account sequence number from Horizon
   const accRes = await fetch(`${stellarConfig.horizonUrl}/accounts/${claimerAddress}`);
@@ -91,9 +84,7 @@ export async function executeGiveawayClaim(
     };
     const opCodes = errJson.extras?.result_codes?.operations?.join(", ");
     const txCode = errJson.extras?.result_codes?.transaction;
-    throw new Error(
-      `Claim failed on Stellar network: ${opCodes || txCode || subRes.statusText}`,
-    );
+    throw new Error(`Claim failed on Stellar network: ${opCodes || txCode || subRes.statusText}`);
   }
 
   const resData = (await subRes.json()) as { hash: string };
@@ -112,11 +103,7 @@ export async function executeReclaimExpired(options: {
 }): Promise<ClaimResult> {
   const { creatorAddress, balanceId } = options;
 
-  const {
-    TransactionBuilder,
-    Account,
-    Operation,
-  } = await import("@stellar/stellar-sdk");
+  const { TransactionBuilder, Account, Operation } = await import("@stellar/stellar-sdk");
 
   const accRes = await fetch(`${stellarConfig.horizonUrl}/accounts/${creatorAddress}`);
   if (!accRes.ok) {
@@ -155,9 +142,7 @@ export async function executeReclaimExpired(options: {
     };
     const opCodes = errJson.extras?.result_codes?.operations?.join(", ");
     const txCode = errJson.extras?.result_codes?.transaction;
-    throw new Error(
-      `Reclaim failed on Stellar network: ${opCodes || txCode || subRes.statusText}`,
-    );
+    throw new Error(`Reclaim failed on Stellar network: ${opCodes || txCode || subRes.statusText}`);
   }
 
   const resData = (await subRes.json()) as { hash: string };

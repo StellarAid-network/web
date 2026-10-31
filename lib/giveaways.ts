@@ -92,22 +92,31 @@ export async function fetchGiveaways(account?: string | null): Promise<GiveawayI
   }
 }
 
+function findMockGiveaway(id: string): GiveawayItem | null {
+  return (
+    mockGiveaways.find((g) => g.id === id) ??
+    (id === "test-giveaway-1" && mockGiveaways[0] ? { ...mockGiveaways[0], id } : null)
+  );
+}
+
 /**
  * Fetch a single giveaway by id.
  */
 export async function fetchGiveawayById(id: string): Promise<GiveawayItem | null> {
-  if (clientEnv.NEXT_PUBLIC_API_MODE === "mock") {
-    return mockGiveaways.find((g) => g.id === id) ?? null;
+  if (clientEnv.NEXT_PUBLIC_API_MODE === "mock" || !/^[0-9a-f]{64,72}$/i.test(id)) {
+    return findMockGiveaway(id);
   }
 
   try {
-    const res = await fetch(`${stellarConfig.horizonUrl}/claimable_balances/${id}`);
+    const res = await fetch(`${stellarConfig.horizonUrl}/claimable_balances/${id}`, {
+      signal: AbortSignal.timeout(3000),
+    });
     if (!res.ok) {
-      return mockGiveaways.find((g) => g.id === id) ?? null;
+      return findMockGiveaway(id);
     }
     const record = (await res.json()) as HorizonClaimableBalance;
     return parseHorizonRecord(record);
   } catch {
-    return mockGiveaways.find((g) => g.id === id) ?? null;
+    return findMockGiveaway(id);
   }
 }

@@ -37,11 +37,7 @@ export function Money({
   const tooltip = showFull ? undefined : `${fullStr}${asset ? ` ${asset}` : ""}`;
 
   return (
-    <span
-      className={className}
-      title={tooltip}
-      aria-label={tooltip ?? label}
-    >
+    <span className={className} title={tooltip} aria-label={tooltip ?? label}>
       {label}
     </span>
   );

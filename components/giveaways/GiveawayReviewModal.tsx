@@ -64,13 +64,8 @@ export function GiveawayReviewModal({
     setError(null);
 
     try {
-      const {
-        TransactionBuilder,
-        Asset,
-        Account,
-        Operation,
-        Claimant,
-      } = await import("@stellar/stellar-sdk");
+      const { TransactionBuilder, Asset, Account, Operation, Claimant } =
+        await import("@stellar/stellar-sdk");
 
       // 1. Fetch creator account sequence
       const accRes = await fetch(`${stellarConfig.horizonUrl}/accounts/${address}`);
@@ -97,10 +92,7 @@ export function GiveawayReviewModal({
             amount: amountPerClaim,
             claimants: [
               // Claimer can claim before expiry
-              new Claimant(
-                dest,
-                Claimant.predicateBeforeRelativeTime(expirySeconds.toString()),
-              ),
+              new Claimant(dest, Claimant.predicateBeforeRelativeTime(expirySeconds.toString())),
               // Creator can reclaim after expiry
               new Claimant(
                 address,
@@ -160,7 +152,7 @@ export function GiveawayReviewModal({
             </div>
             <div>
               <h3 className="text-lg font-bold">Giveaway Created!</h3>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Your native claimable balances have been confirmed on Stellar.
               </p>
             </div>
@@ -172,20 +164,22 @@ export function GiveawayReviewModal({
             >
               View on Stellar.Expert <ExternalLink className="h-3 w-3" />
             </a>
-            <Button className="w-full mt-4" onClick={() => onOpenChange(false)}>
+            <Button className="mt-4 w-full" onClick={() => onOpenChange(false)}>
               Done
             </Button>
           </div>
         ) : (
           <div className="space-y-4 py-2">
-            <div className="rounded-lg border bg-muted/30 p-4 space-y-2 text-sm">
+            <div className="space-y-2 rounded-lg border bg-muted/30 p-4 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Asset:</span>
                 <span className="font-semibold">{assetCode}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Amount per claim:</span>
-                <span className="font-semibold">{amountPerClaim} {assetCode}</span>
+                <span className="font-semibold">
+                  {amountPerClaim} {assetCode}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Recipients:</span>
@@ -193,7 +187,9 @@ export function GiveawayReviewModal({
               </div>
               <div className="flex justify-between border-t pt-2 font-bold">
                 <span>Total locked:</span>
-                <span className="text-primary">{totalLocked} {assetCode}</span>
+                <span className="text-primary">
+                  {totalLocked} {assetCode}
+                </span>
               </div>
             </div>
 
@@ -220,25 +216,21 @@ export function GiveawayReviewModal({
             </div>
 
             {error && (
-              <div className="rounded border border-destructive/50 bg-destructive/10 p-3 text-xs text-destructive flex items-start gap-2">
-                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 rounded border border-destructive/50 bg-destructive/10 p-3 text-xs text-destructive">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
             {isNetworkMismatch && (
-              <div className="rounded border border-amber-500/50 bg-amber-500/10 p-3 text-xs text-amber-600 dark:text-amber-400 flex items-start gap-2">
-                <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 rounded border border-amber-500/50 bg-amber-500/10 p-3 text-xs text-amber-600 dark:text-amber-400">
+                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>Your wallet is on a different network than {stellarConfig.network}.</span>
               </div>
             )}
 
             <DialogFooter className="gap-2 sm:gap-0">
-              <Button
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-              >
+              <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
                 Cancel
               </Button>
               <Button

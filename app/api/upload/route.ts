@@ -44,8 +44,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const env = getServerEnv();
 
     // 1. Rate limiting check
-    const clientIp =
-      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+    const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
 
     if (!checkRateLimit(clientIp)) {
       return NextResponse.json(
@@ -64,9 +63,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { status: 400 },
       );
     }
-    const file = formData.get("file") as
-      | { type: string; size: number; arrayBuffer?: () => Promise<ArrayBuffer> }
-      | null;
+    const file = formData.get("file") as {
+      type: string;
+      size: number;
+      arrayBuffer?: () => Promise<ArrayBuffer>;
+    } | null;
 
     if (!file || typeof file !== "object" || !("size" in file) || !("type" in file)) {
       return NextResponse.json(
@@ -121,10 +122,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       });
 
       if (!pinRes.ok) {
-        return NextResponse.json(
-          { error: "Failed to pin file to IPFS provider" },
-          { status: 502 },
-        );
+        return NextResponse.json({ error: "Failed to pin file to IPFS provider" }, { status: 502 });
       }
 
       const pinData = (await pinRes.json()) as { IpfsHash: string };

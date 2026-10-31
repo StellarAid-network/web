@@ -8,11 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Money } from "@/components/ui/Money";
-import {
-  simulateContribution,
-  type HelpRequestItem,
-  type SimulationPreview,
-} from "@/lib/requests";
+import { simulateContribution, type HelpRequestItem, type SimulationPreview } from "@/lib/requests";
 
 export interface ContributeFormProps {
   request: HelpRequestItem;
@@ -90,7 +86,11 @@ export function ContributeForm({
   };
 
   return (
-    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-6" data-testid="contribute-form">
+    <form
+      onSubmit={(e) => void handleSubmit(e)}
+      className="space-y-6"
+      data-testid="contribute-form"
+    >
       <Card>
         <CardHeader>
           <CardTitle>Contribute to Escrow</CardTitle>
@@ -136,7 +136,7 @@ export function ContributeForm({
 
           {/* Pre-Wallet Simulation Preview */}
           <div
-            className="rounded-lg border bg-muted/40 p-3 space-y-2 text-xs"
+            className="space-y-2 rounded-lg border bg-muted/40 p-3 text-xs"
             data-testid="simulation-preview"
           >
             <div className="flex items-center justify-between font-medium">
@@ -166,7 +166,7 @@ export function ContributeForm({
             </div>
 
             {simulation?.ok ? (
-              <div className="flex items-center justify-between text-muted-foreground pt-1 border-t">
+              <div className="flex items-center justify-between border-t pt-1 text-muted-foreground">
                 <span>Estimated Soroban network fee:</span>
                 <span className="font-mono text-foreground" data-testid="simulation-fee">
                   <Money value={simulation.estimatedFeeStroops} asset="XLM" showFull />
@@ -176,7 +176,7 @@ export function ContributeForm({
               simulation?.errorMessage && (
                 <p
                   role="alert"
-                  className="text-destructive pt-1 border-t"
+                  className="border-t pt-1 text-destructive"
                   data-testid="simulation-error-message"
                 >
                   {simulation.errorMessage}
@@ -187,22 +187,22 @@ export function ContributeForm({
 
           {/* Plain-Language Refund Policy */}
           <div
-            className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3.5 space-y-1 text-xs"
+            className="space-y-1 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3.5 text-xs"
             data-testid="refund-policy-box"
           >
             <div className="flex items-center gap-1.5 font-semibold text-emerald-700 dark:text-emerald-300">
               <ShieldCheck className="h-4 w-4 shrink-0" />
               <span>100% On-Chain Escrow Refund Guarantee</span>
             </div>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="leading-relaxed text-muted-foreground">
               Funds are held in on-chain Soroban escrow—never by StellarAid servers or moderators.
-              If the fundraising goal is not reached by the deadline, or if the request is
-              cancelled or disputed, you can claim a 100% refund directly from the smart contract.
+              If the fundraising goal is not reached by the deadline, or if the request is cancelled
+              or disputed, you can claim a 100% refund directly from the smart contract.
             </p>
           </div>
 
           {submitError && (
-            <p role="alert" className="text-xs text-destructive flex items-center gap-1">
+            <p role="alert" className="flex items-center gap-1 text-xs text-destructive">
               <Info className="h-3.5 w-3.5" /> {submitError}
             </p>
           )}

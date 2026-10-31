@@ -53,7 +53,7 @@ export default function GiveawayDetailPage(): React.ReactElement {
     return (
       <div className="mx-auto max-w-2xl space-y-4 p-4">
         <Skeleton className="h-6 w-32" />
-        <Card className="p-6 space-y-4">
+        <Card className="space-y-4 p-6">
           <Skeleton className="h-8 w-3/4" />
           <Skeleton className="h-20 w-full" />
           <Skeleton className="h-10 w-full" />
@@ -81,7 +81,7 @@ export default function GiveawayDetailPage(): React.ReactElement {
 
   const isExpired = Boolean(
     giveaway.status === "expired" ||
-      (giveaway.expiresAt && new Date(giveaway.expiresAt).getTime() < Date.now()),
+    (giveaway.expiresAt && new Date(giveaway.expiresAt).getTime() < Date.now()),
   );
 
   const isCreator = Boolean(address && address === giveaway.creator);
@@ -137,11 +137,11 @@ export default function GiveawayDetailPage(): React.ReactElement {
             </div>
             <div className="flex items-center gap-2">
               {isCreator && (
-                <Badge variant="outline" className="border-primary text-primary text-xs">
+                <Badge variant="outline" className="border-primary text-xs text-primary">
                   Creator View
                 </Badge>
               )}
-              <Badge variant={statusVariant} className="text-sm capitalize shrink-0">
+              <Badge variant={statusVariant} className="shrink-0 text-sm capitalize">
                 {isExpired ? "Expired" : giveaway.status}
               </Badge>
             </div>
@@ -149,7 +149,7 @@ export default function GiveawayDetailPage(): React.ReactElement {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <div className="rounded-lg bg-muted/50 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex flex-col justify-between gap-3 rounded-lg bg-muted/50 p-4 sm:flex-row sm:items-center">
             <div>
               <span className="text-xs font-medium uppercase text-muted-foreground">
                 Amount per claim
@@ -168,9 +168,9 @@ export default function GiveawayDetailPage(): React.ReactElement {
             </div>
           </div>
 
-          <div className="grid gap-4 border-t pt-4 sm:grid-cols-2 text-sm">
+          <div className="grid gap-4 border-t pt-4 text-sm sm:grid-cols-2">
             <div className="space-y-1">
-              <span className="text-muted-foreground flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 text-muted-foreground">
                 <ShieldCheck className="h-4 w-4" /> Creator
               </span>
               <div>
@@ -179,17 +179,18 @@ export default function GiveawayDetailPage(): React.ReactElement {
             </div>
 
             <div className="space-y-1">
-              <span className="text-muted-foreground flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 text-muted-foreground">
                 <Users className="h-4 w-4" /> Allowed claimers
               </span>
               <div className="font-medium">
-                {giveaway.claimants.length} destination address{giveaway.claimants.length === 1 ? "" : "es"}
+                {giveaway.claimants.length} destination address
+                {giveaway.claimants.length === 1 ? "" : "es"}
               </div>
             </div>
 
             {giveaway.claimableFrom && (
               <div className="space-y-1">
-                <span className="text-muted-foreground flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 text-muted-foreground">
                   <Calendar className="h-4 w-4" /> Claimable from
                 </span>
                 <div className="font-medium">
@@ -200,12 +201,10 @@ export default function GiveawayDetailPage(): React.ReactElement {
 
             {giveaway.expiresAt && (
               <div className="space-y-1">
-                <span className="text-muted-foreground flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 text-muted-foreground">
                   <Clock className="h-4 w-4" /> Reclaimable after
                 </span>
-                <div className="font-medium">
-                  {new Date(giveaway.expiresAt).toLocaleString()}
-                </div>
+                <div className="font-medium">{new Date(giveaway.expiresAt).toLocaleString()}</div>
               </div>
             )}
           </div>
@@ -216,9 +215,9 @@ export default function GiveawayDetailPage(): React.ReactElement {
               <h4 className="text-xs font-semibold uppercase text-muted-foreground">
                 Eligible claimers
               </h4>
-              <div className="max-h-40 overflow-y-auto space-y-1 rounded border bg-muted/20 p-2">
+              <div className="max-h-40 space-y-1 overflow-y-auto rounded border bg-muted/20 p-2">
                 {giveaway.claimants.map((dest) => (
-                  <div key={dest} className="text-xs font-mono py-0.5">
+                  <div key={dest} className="py-0.5 font-mono text-xs">
                     <Address value={dest} truncate={false} href />
                   </div>
                 ))}
@@ -228,7 +227,7 @@ export default function GiveawayDetailPage(): React.ReactElement {
 
           {/* Creator View: Reclaim expired action */}
           {isCreator && (
-            <div className="border-t pt-4 space-y-3">
+            <div className="space-y-3 border-t pt-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="text-sm font-semibold">Creator Operations</h4>
@@ -246,12 +245,12 @@ export default function GiveawayDetailPage(): React.ReactElement {
                 >
                   {reclaimStatus === "submitting" ? (
                     <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       <span>Reclaiming...</span>
                     </>
                   ) : (
                     <>
-                      <RotateCcw className="w-3.5 h-3.5" />
+                      <RotateCcw className="h-3.5 w-3.5" />
                       <span>Reclaim Expired</span>
                     </>
                   )}
@@ -259,25 +258,25 @@ export default function GiveawayDetailPage(): React.ReactElement {
               </div>
 
               {reclaimError && (
-                <div className="p-3 rounded-lg border border-destructive/20 bg-destructive/5 text-xs text-destructive flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <div className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-3 text-xs text-destructive">
+                  <AlertCircle className="h-4 w-4 flex-shrink-0" />
                   <span>{reclaimError}</span>
                 </div>
               )}
 
               {reclaimStatus === "success" && reclaimTxHash && (
-                <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-xs text-emerald-600 space-y-1">
+                <div className="space-y-1 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 text-xs text-emerald-600">
                   <div className="flex items-center gap-1.5 font-medium">
-                    <CheckCircle2 className="w-4 h-4" />
+                    <CheckCircle2 className="h-4 w-4" />
                     <span>Expired funds reclaimed successfully.</span>
                   </div>
                   <a
                     href={explorerTxUrl(reclaimTxHash)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 underline text-primary"
+                    className="inline-flex items-center gap-1 text-primary underline"
                   >
-                    View on explorer <ExternalLink className="w-3 h-3" />
+                    View on explorer <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>
               )}

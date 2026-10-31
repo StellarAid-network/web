@@ -35,11 +35,18 @@ export const CreateGiveawayFormSchema = z.object({
 export type CreateGiveawayFormValues = z.infer<typeof CreateGiveawayFormSchema>;
 
 interface CreateGiveawayFormProps {
-  onReview: (values: CreateGiveawayFormValues, parsedClaimants: string[], totalLocked: string) => void;
+  onReview: (
+    values: CreateGiveawayFormValues,
+    parsedClaimants: string[],
+    totalLocked: string,
+  ) => void;
   disabled?: boolean;
 }
 
-export function CreateGiveawayForm({ onReview, disabled }: CreateGiveawayFormProps): React.ReactElement {
+export function CreateGiveawayForm({
+  onReview,
+  disabled,
+}: CreateGiveawayFormProps): React.ReactElement {
   const {
     register,
     handleSubmit,
@@ -95,7 +102,7 @@ export function CreateGiveawayForm({ onReview, disabled }: CreateGiveawayFormPro
           <div className="space-y-2">
             <Label htmlFor="assetCode">Asset</Label>
             <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer border rounded-lg p-3 w-full hover:bg-muted/50 transition-colors">
+              <label className="flex w-full cursor-pointer items-center gap-2 rounded-lg border p-3 transition-colors hover:bg-muted/50">
                 <input
                   type="radio"
                   value="USDC"
@@ -108,7 +115,7 @@ export function CreateGiveawayForm({ onReview, disabled }: CreateGiveawayFormPro
                 </div>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer border rounded-lg p-3 w-full hover:bg-muted/50 transition-colors">
+              <label className="flex w-full cursor-pointer items-center gap-2 rounded-lg border p-3 transition-colors hover:bg-muted/50">
                 <input
                   type="radio"
                   value="XLM"
@@ -134,7 +141,7 @@ export function CreateGiveawayForm({ onReview, disabled }: CreateGiveawayFormPro
               disabled={disabled}
             />
             {errors.amountPerClaim && (
-              <p className="text-xs text-destructive flex items-center gap-1">
+              <p className="flex items-center gap-1 text-xs text-destructive">
                 <AlertCircle className="h-3 w-3" /> {errors.amountPerClaim.message}
               </p>
             )}
@@ -150,16 +157,16 @@ export function CreateGiveawayForm({ onReview, disabled }: CreateGiveawayFormPro
               id="claimantsRaw"
               rows={4}
               placeholder="Paste Stellar addresses (G...), separated by commas or newlines"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               {...register("claimantsRaw")}
               disabled={disabled}
             />
             {errors.claimantsRaw ? (
-              <p className="text-xs text-destructive flex items-center gap-1">
+              <p className="flex items-center gap-1 text-xs text-destructive">
                 <AlertCircle className="h-3 w-3" /> {errors.claimantsRaw.message}
               </p>
             ) : (
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <p className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Info className="h-3.5 w-3.5" /> Each claimant must have an active Stellar wallet
                 account.
               </p>
@@ -183,7 +190,7 @@ export function CreateGiveawayForm({ onReview, disabled }: CreateGiveawayFormPro
           </div>
 
           {/* Live Summary */}
-          <div className="rounded-lg bg-muted/60 p-4 space-y-1">
+          <div className="space-y-1 rounded-lg bg-muted/60 p-4">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Total locked:</span>
               <span className="font-bold">
@@ -198,7 +205,12 @@ export function CreateGiveawayForm({ onReview, disabled }: CreateGiveawayFormPro
         </CardContent>
       </Card>
 
-      <Button type="submit" size="lg" className="w-full" disabled={disabled || parsedClaimants.length === 0}>
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full"
+        disabled={disabled || parsedClaimants.length === 0}
+      >
         Review Giveaway
       </Button>
     </form>

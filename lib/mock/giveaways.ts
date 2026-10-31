@@ -42,14 +42,13 @@ export const mockGiveaways: MockGiveaway[] = [
     asset: { code: "XLM" },
     amount: "500.00",
     amountPerClaim: "50.00",
-    claimants: [
-      "GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ",
-    ],
+    claimants: ["GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ"],
     claimableFrom: new Date(Date.now() - 86400 * 1000).toISOString(),
     expiresAt: new Date(Date.now() + 2 * 86400 * 1000).toISOString(),
     status: "open",
     title: "Stellar Developer Gas Grant",
-    description: "Free XLM distribution to help developers fund testnet and mainnet transaction fees.",
+    description:
+      "Free XLM distribution to help developers fund testnet and mainnet transaction fees.",
   },
   {
     id: "00000000ffffaaaabbbbccccddddeeeeffff0000111122223333444455556666",
@@ -57,9 +56,7 @@ export const mockGiveaways: MockGiveaway[] = [
     asset: { code: "USDC" },
     amount: "250.00",
     amountPerClaim: "25.00",
-    claimants: [
-      "GCKFBEIYV2U22IO2GUOWGQPTZXGHOA7STAK2OX7WNOBPGXBJWBK6NY7F",
-    ],
+    claimants: ["GCKFBEIYV2U22IO2GUOWGQPTZXGHOA7STAK2OX7WNOBPGXBJWBK6NY7F"],
     claimableFrom: new Date(Date.now() - 14 * 86400 * 1000).toISOString(),
     expiresAt: new Date(Date.now() - 86400 * 1000).toISOString(),
     status: "expired",

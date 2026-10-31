@@ -16,7 +16,10 @@ export interface RequestCardProps {
 
 export function RequestCard({ request }: RequestCardProps): React.ReactElement {
   return (
-    <Card className="flex flex-col justify-between transition-shadow hover:shadow-md" data-testid={`request-card-${request.id}`}>
+    <Card
+      className="flex flex-col justify-between transition-shadow hover:shadow-md"
+      data-testid={`request-card-${request.id}`}
+    >
       <CardHeader className="space-y-2 pb-3">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>Creator:</span>

@@ -31,9 +31,7 @@ export default function GiveawaysPage(): React.ReactElement {
     ? giveaways.filter((g) => g.creator.toLowerCase() === address.toLowerCase())
     : [];
   const claimableGiveaways = address
-    ? giveaways.filter((g) =>
-        g.claimants.some((c) => c.toLowerCase() === address.toLowerCase()),
-      )
+    ? giveaways.filter((g) => g.claimants.some((c) => c.toLowerCase() === address.toLowerCase()))
     : [];
 
   return (
@@ -46,7 +44,7 @@ export default function GiveawaysPage(): React.ReactElement {
           </p>
         </div>
         <Link href="/giveaways/create">
-          <Button className="w-full sm:w-auto gap-2">
+          <Button className="w-full gap-2 sm:w-auto">
             <Plus className="h-4 w-4" />
             Create giveaway
           </Button>
@@ -60,30 +58,30 @@ export default function GiveawaysPage(): React.ReactElement {
           <TabsTrigger value="claimable">For me</TabsTrigger>
         </TabsList>
 
-        {isLoading ? (
-          <div className="grid gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="space-y-3 rounded-lg border p-4">
-                <div className="flex justify-between">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-5 w-16" />
-                </div>
-                <Skeleton className="h-8 w-24" />
-                <Skeleton className="h-4 w-full" />
+        {(["explore", "created", "claimable"] as const).map((tabValue) => (
+          <TabsContent key={tabValue} value={tabValue} className="pt-4">
+            {isLoading ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="space-y-3 rounded-lg border p-4">
+                    <div className="flex justify-between">
+                      <Skeleton className="h-5 w-32" />
+                      <Skeleton className="h-5 w-16" />
+                    </div>
+                    <Skeleton className="h-8 w-24" />
+                    <Skeleton className="h-4 w-full" />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        ) : isError ? (
-          <div className="rounded-lg border border-destructive/50 p-8 text-center">
-            <p className="text-sm text-destructive">Failed to load giveaways.</p>
-            <Button variant="outline" size="sm" onClick={() => void refetch()} className="mt-3">
-              Retry
-            </Button>
-          </div>
-        ) : (
-          <>
-            <TabsContent value="explore" className="pt-4">
-              {exploreGiveaways.length === 0 ? (
+            ) : isError ? (
+              <div className="rounded-lg border border-destructive/50 p-8 text-center">
+                <p className="text-sm text-destructive">Failed to load giveaways.</p>
+                <Button variant="outline" size="sm" onClick={() => void refetch()} className="mt-3">
+                  Retry
+                </Button>
+              </div>
+            ) : tabValue === "explore" ? (
+              exploreGiveaways.length === 0 ? (
                 <EmptyState
                   title="No open giveaways right now"
                   description="Be the first to distribute funds to community members!"
@@ -94,11 +92,9 @@ export default function GiveawaysPage(): React.ReactElement {
                     <GiveawayCard key={giveaway.id} giveaway={giveaway} />
                   ))}
                 </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="created" className="pt-4">
-              {!address ? (
+              )
+            ) : tabValue === "created" ? (
+              !address ? (
                 <EmptyState
                   title="Connect your wallet"
                   description="Connect your wallet to see giveaways created by you."
@@ -114,30 +110,26 @@ export default function GiveawaysPage(): React.ReactElement {
                     <GiveawayCard key={giveaway.id} giveaway={giveaway} />
                   ))}
                 </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="claimable" className="pt-4">
-              {!address ? (
-                <EmptyState
-                  title="Connect your wallet"
-                  description="Connect your wallet to check for claimable balances."
-                />
-              ) : claimableGiveaways.length === 0 ? (
-                <EmptyState
-                  title="No giveaways claimable for your account"
-                  description="When someone sends you a claimable balance, it will appear here."
-                />
-              ) : (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {claimableGiveaways.map((giveaway) => (
-                    <GiveawayCard key={giveaway.id} giveaway={giveaway} />
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-          </>
-        )}
+              )
+            ) : !address ? (
+              <EmptyState
+                title="Connect your wallet"
+                description="Connect your wallet to check for claimable balances."
+              />
+            ) : claimableGiveaways.length === 0 ? (
+              <EmptyState
+                title="No giveaways claimable for your account"
+                description="When someone sends you a claimable balance, it will appear here."
+              />
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {claimableGiveaways.map((giveaway) => (
+                  <GiveawayCard key={giveaway.id} giveaway={giveaway} />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );
@@ -150,7 +142,7 @@ function EmptyState({ title, description }: { title: string; description: string
         <Gift className="h-6 w-6 text-muted-foreground" />
       </div>
       <h3 className="mt-3 text-base font-semibold">{title}</h3>
-      <p className="mt-1 text-sm text-muted-foreground max-w-sm">{description}</p>
+      <p className="mt-1 max-w-sm text-sm text-muted-foreground">{description}</p>
     </div>
   );
 }

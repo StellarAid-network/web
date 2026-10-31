@@ -119,9 +119,8 @@ export default function WalletPage(): React.ReactElement {
     setTrustlineError(null);
     try {
       // Build the change_trust transaction via the API server's Horizon endpoint.
-      const { TransactionBuilder, Asset, Account, Operation } = await import(
-        "@stellar/stellar-sdk"
-      );
+      const { TransactionBuilder, Asset, Account, Operation } =
+        await import("@stellar/stellar-sdk");
 
       const accountData = await fetchAccount(address);
       const stellarAccount = new Account(address, accountData.sequence);
@@ -220,7 +219,9 @@ export default function WalletPage(): React.ReactElement {
                 )}
               </div>
               {trustlineError && (
-                <p className="text-xs text-red-600" role="alert">{trustlineError}</p>
+                <p className="text-xs text-red-600" role="alert">
+                  {trustlineError}
+                </p>
               )}
             </>
           )}
@@ -247,7 +248,7 @@ export default function WalletPage(): React.ReactElement {
             <ul className="space-y-1 text-sm">
               {payments.map((p) => (
                 <li key={p.id} className="flex items-center justify-between gap-2">
-                  <span className="text-muted-foreground text-xs">
+                  <span className="text-xs text-muted-foreground">
                     {new Date(p.created_at).toLocaleDateString()}
                   </span>
                   <span className="font-mono text-xs">

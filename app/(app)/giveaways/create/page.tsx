@@ -23,11 +23,7 @@ export default function CreateGiveawayPage(): React.ReactElement {
   const [parsedClaimants, setParsedClaimants] = React.useState<string[]>([]);
   const [totalLocked, setTotalLocked] = React.useState<string>("0.00");
 
-  const handleReview = (
-    values: CreateGiveawayFormValues,
-    claimants: string[],
-    total: string,
-  ) => {
+  const handleReview = (values: CreateGiveawayFormValues, claimants: string[], total: string) => {
     setFormValues(values);
     setParsedClaimants(claimants);
     setTotalLocked(total);
@@ -52,8 +48,7 @@ export default function CreateGiveawayPage(): React.ReactElement {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Create Giveaway</h1>
         <p className="text-sm text-muted-foreground">
-          Deposit funds into native Stellar claimable balances with an automatic reclamation
-          window.
+          Deposit funds into native Stellar claimable balances with an automatic reclamation window.
         </p>
       </div>
 

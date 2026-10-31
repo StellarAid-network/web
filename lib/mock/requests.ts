@@ -3,12 +3,7 @@
  */
 
 export type HelpRequestStatus =
-  | "Open"
-  | "Funded"
-  | "Released"
-  | "Cancelled"
-  | "Failed"
-  | "Disputed";
+  "Open" | "Funded" | "Released" | "Cancelled" | "Failed" | "Disputed";
 
 export type MilestoneStatus = "Pending" | "Submitted" | "Approved" | "Released";
 
@@ -42,6 +37,7 @@ export interface HelpRequestItem {
   deadline: string; // ISO date string
   contentHash: string;
   hashMismatch: boolean;
+  hidden?: boolean;
   title: string;
   description: string;
   tags: string[];

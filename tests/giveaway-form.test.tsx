@@ -2,9 +2,13 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("@/lib/wallet-kit", () => ({
-  connectWallet: vi.fn().mockResolvedValue("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ"),
+  connectWallet: vi
+    .fn()
+    .mockResolvedValue("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ"),
   disconnectWallet: vi.fn().mockResolvedValue(undefined),
-  getWalletAddress: vi.fn().mockResolvedValue("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ"),
+  getWalletAddress: vi
+    .fn()
+    .mockResolvedValue("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ"),
   getWalletKitNetwork: vi.fn().mockResolvedValue({
     network: "TESTNET",
     networkPassphrase: "Test SDF Network ; September 2015",
@@ -14,18 +18,14 @@ vi.mock("@/lib/wallet-kit", () => ({
   initWalletKit: vi.fn(),
 }));
 
-import {
-  CreateGiveawayFormSchema,
-} from "@/components/giveaways/CreateGiveawayForm";
+import { CreateGiveawayFormSchema } from "@/components/giveaways/CreateGiveawayForm";
 import { GiveawayCard } from "@/components/giveaways/GiveawayCard";
 import { GiveawayReviewModal } from "@/components/giveaways/GiveawayReviewModal";
 import type { GiveawayItem } from "@/lib/giveaways";
 
 describe("Giveaway form and components", () => {
-  const validStellarAddress1 =
-    "GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ";
-  const validStellarAddress2 =
-    "GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3IF2WS7UKLZ5";
+  const validStellarAddress1 = "GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ";
+  const validStellarAddress2 = "GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3IF2WS7UKLZ5";
 
   it("validates form schema correctly", () => {
     // Valid values

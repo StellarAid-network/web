@@ -2,8 +2,10 @@
  * Giveaway eligibility and trustline evaluation utilities.
  */
 
+import { createStellarAid } from "@stellar-aid/sdk";
 import { stellarConfig } from "../stellar";
 import { clientEnv } from "../env";
+import { fetchReputationSummary } from "../social";
 import type { GiveawayItem } from "../giveaways";
 
 export interface EligibilityReport {
@@ -26,14 +28,44 @@ export interface EligibilityCriteria {
 }
 
 /**
- * Stubbed reputation score lookup.
- * Returns score (0-100), defaults to 50 for active wallets.
+ * Resolves an account's reputation score via the indexed `/reputation/:address`
+ * endpoint, falling back to an on-chain Soroban `reputation.getScore` read via
+ * `@stellar-aid/sdk` if the API is unavailable.
  */
 export async function getReputationScore(account: string): Promise<number> {
   if (!account) return 0;
-  if (clientEnv.NEXT_PUBLIC_API_MODE === "mock") return 65;
-  // Stub implementation until API/SDK reputation indexer is queried
-  return 50;
+  if (clientEnv.NEXT_PUBLIC_API_MODE === "mock") {
+    const summary = await fetchReputationSummary(account);
+    return summary.score;
+  }
+
+  try {
+    const res = await fetch(
+      new URL(`/reputation/${encodeURIComponent(account)}`, clientEnv.NEXT_PUBLIC_API_URL),
+    );
+    if (res.ok) {
+      const body = (await res.json()) as { score?: number | string };
+      const parsed = Number(body.score);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+  } catch {
+    // Fall through to direct Soroban contract read
+  }
+
+  try {
+    const aid = createStellarAid({
+      network: stellarConfig.network,
+      rpcUrl: stellarConfig.rpcUrl,
+      horizonUrl: stellarConfig.horizonUrl,
+    });
+    const onChainScore = await aid.reputation.getScore(account);
+    return Number(onChainScore);
+  } catch {
+    const fallback = await fetchReputationSummary(account);
+    return fallback.score;
+  }
 }
 
 /**

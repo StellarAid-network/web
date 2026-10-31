@@ -15,12 +15,7 @@ import {
   type HelpRequestStatus,
 } from "./mock/requests";
 
-export type {
-  HelpRequestContribution,
-  HelpRequestItem,
-  HelpRequestMilestone,
-  HelpRequestStatus,
-};
+export type { HelpRequestContribution, HelpRequestItem, HelpRequestMilestone, HelpRequestStatus };
 
 export interface HelpRequestFilterOptions {
   status?: "All" | "Open" | "NearingGoal" | "EndingSoon" | "Funded" | "Failed";
@@ -185,9 +180,7 @@ export async function fetchHelpRequests(
     if (filters.creator) params.set("creator", filters.creator);
 
     const query = params.toString();
-    const res = await apiFetch<{ data: HelpRequestItem[] }>(
-      `/requests${query ? `?${query}` : ""}`,
-    );
+    const res = await apiFetch<{ data: HelpRequestItem[] }>(`/requests${query ? `?${query}` : ""}`);
     if (!res?.data || res.data.length === 0) {
       return filterHelpRequests(getMockRequests(), filters);
     }
@@ -313,9 +306,7 @@ export interface CreateHelpRequestInput {
 /**
  * Creates a help request on-chain and attaches off-chain metadata with SHA-256 contentHash.
  */
-export async function createHelpRequest(
-  input: CreateHelpRequestInput,
-): Promise<HelpRequestItem> {
+export async function createHelpRequest(input: CreateHelpRequestInput): Promise<HelpRequestItem> {
   const contentHash = await computeContentHash({
     title: input.title,
     description: input.description,
@@ -446,11 +437,7 @@ export async function claimRefund(params: {
     throw new Error(`Help request ${params.requestId} not found`);
   }
 
-  if (
-    target.status !== "Failed" &&
-    target.status !== "Cancelled" &&
-    target.status !== "Disputed"
-  ) {
+  if (target.status !== "Failed" && target.status !== "Cancelled" && target.status !== "Disputed") {
     throw new Error(`Refunds are not available when request status is ${target.status}`);
   }
 

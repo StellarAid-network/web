@@ -187,9 +187,7 @@ export function CreateRequestForm({
 
   const onValidSubmit = async (values: CreateRequestFormValues) => {
     const goalStroops = parseAmount(values.goal, 7);
-    const deadlineIso = new Date(
-      Date.now() + values.deadlineDays * 86400 * 1000,
-    ).toISOString();
+    const deadlineIso = new Date(Date.now() + values.deadlineDays * 86400 * 1000).toISOString();
     const contentHash = await computeContentHash({
       title: values.title,
       description: values.description,
@@ -243,7 +241,7 @@ export function CreateRequestForm({
               disabled={disabled || isSubmitting}
             />
             {errors.title && (
-              <p className="text-xs text-destructive flex items-center gap-1" role="alert">
+              <p className="flex items-center gap-1 text-xs text-destructive" role="alert">
                 <AlertCircle className="h-3 w-3" /> {errors.title.message}
               </p>
             )}
@@ -260,7 +258,7 @@ export function CreateRequestForm({
               disabled={disabled || isSubmitting}
             />
             {errors.description && (
-              <p className="text-xs text-destructive flex items-center gap-1" role="alert">
+              <p className="flex items-center gap-1 text-xs text-destructive" role="alert">
                 <AlertCircle className="h-3 w-3" /> {errors.description.message}
               </p>
             )}
@@ -288,11 +286,11 @@ export function CreateRequestForm({
                   disabled={disabled || isSubmitting}
                   className="text-xs"
                 />
-                <Upload className="h-4 w-4 text-muted-foreground shrink-0" />
+                <Upload className="h-4 w-4 shrink-0 text-muted-foreground" />
               </div>
               {uploadStatus && (
                 <p
-                  className="text-xs text-emerald-600 flex items-center gap-1"
+                  className="flex items-center gap-1 text-xs text-emerald-600"
                   data-testid="upload-status"
                 >
                   <CheckCircle2 className="h-3 w-3" /> {uploadStatus}
@@ -301,7 +299,7 @@ export function CreateRequestForm({
             </div>
           </div>
 
-          <div className="rounded-md bg-muted/60 p-3 text-xs flex items-center justify-between gap-2">
+          <div className="flex items-center justify-between gap-2 rounded-md bg-muted/60 p-3 text-xs">
             <span className="inline-flex items-center gap-1.5 text-muted-foreground">
               <ShieldCheck className="h-4 w-4 text-emerald-600" />
               Canonical SHA-256 content_hash:
@@ -346,7 +344,7 @@ export function CreateRequestForm({
                 disabled={disabled || isSubmitting}
               />
               {errors.goal && (
-                <p className="text-xs text-destructive flex items-center gap-1" role="alert">
+                <p className="flex items-center gap-1 text-xs text-destructive" role="alert">
                   <AlertCircle className="h-3 w-3" /> {errors.goal.message}
                 </p>
               )}
@@ -390,7 +388,7 @@ export function CreateRequestForm({
             {fields.map((field, index) => (
               <div
                 key={field.id}
-                className="rounded-lg border p-3 space-y-3 bg-muted/20"
+                className="space-y-3 rounded-lg border bg-muted/20 p-3"
                 data-testid={`milestone-field-${index}`}
               >
                 <div className="flex items-center justify-between">
@@ -467,7 +465,7 @@ export function CreateRequestForm({
 
             {milestoneRootError && (
               <p
-                className="text-xs text-destructive flex items-center gap-1"
+                className="flex items-center gap-1 text-xs text-destructive"
                 role="alert"
                 data-testid="milestone-sum-error"
               >

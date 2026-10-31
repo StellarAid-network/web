@@ -4,13 +4,22 @@ const emptyToUndefined = (value: unknown): unknown => (value === "" ? undefined 
 const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
 
 const clientEnvSchema = z.object({
-  NEXT_PUBLIC_STELLAR_NETWORK: z.enum(["testnet", "mainnet", "local"]),
+  NEXT_PUBLIC_STELLAR_NETWORK: z.enum(["testnet", "mainnet", "local"]).default("testnet"),
   NEXT_PUBLIC_RPC_URL: optionalUrl,
   NEXT_PUBLIC_HORIZON_URL: optionalUrl,
-  NEXT_PUBLIC_API_URL: z.string().url(),
+  NEXT_PUBLIC_API_URL: z.preprocess(
+    emptyToUndefined,
+    z.string().url().default("http://localhost:4000"),
+  ),
   NEXT_PUBLIC_API_MODE: z.enum(["live", "mock"]).default("live"),
-  NEXT_PUBLIC_APP_URL: z.string().url(),
-  NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1),
+  NEXT_PUBLIC_APP_URL: z.preprocess(
+    emptyToUndefined,
+    z.string().url().default("http://localhost:3000"),
+  ),
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.preprocess(
+    emptyToUndefined,
+    z.string().min(1).default("1x00000000000000000000AA"),
+  ),
   NEXT_PUBLIC_SENTRY_DSN: optionalUrl,
 });
 

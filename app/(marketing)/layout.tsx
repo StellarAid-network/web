@@ -9,11 +9,13 @@ export default function MarketingLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="flex-1">{children}</main>
+      <main id="main-content" tabIndex={-1} className="flex-1">
+        {children}
+      </main>
       <footer className="border-t py-8">
         <div className="container flex flex-col items-center justify-between gap-4 text-sm text-muted-foreground sm:flex-row">
           <p>© {new Date().getFullYear()} StellarAid. Open-source mutual aid.</p>
-          <nav className="flex items-center gap-4">
+          <nav aria-label="Footer navigation" className="flex items-center gap-4">
             <Link href="/about" className="hover:text-foreground">
               About
             </Link>

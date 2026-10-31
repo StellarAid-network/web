@@ -7,9 +7,13 @@ import { useWallet } from "@/hooks/use-wallet";
 
 // Mock the wallet-kit module so tests never open a browser extension.
 vi.mock("@/lib/wallet-kit", () => ({
-  connectWallet: vi.fn().mockResolvedValue("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ"),
+  connectWallet: vi
+    .fn()
+    .mockResolvedValue("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ"),
   disconnectWallet: vi.fn().mockResolvedValue(undefined),
-  getWalletAddress: vi.fn().mockResolvedValue("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ"),
+  getWalletAddress: vi
+    .fn()
+    .mockResolvedValue("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ"),
   getWalletKitNetwork: vi.fn().mockResolvedValue({
     network: "TESTNET",
     networkPassphrase: "Test SDF Network ; September 2015",
@@ -58,9 +62,7 @@ describe("useWallet", () => {
     await act(async () => {
       await result.current.connect();
     });
-    expect(result.current.address).toBe(
-      "GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ",
-    );
+    expect(result.current.address).toBe("GBTYIQPBLDAXZ3DGFY5KAYFHRVGOF5V5GU263RTRVQQOAIICCW5S4VEQ");
   });
 
   it("disconnect clears address", async () => {
@@ -80,7 +82,9 @@ describe("useWallet", () => {
     const { signWalletTransaction } = await import("@/lib/wallet-kit");
     const { result } = renderHook(() => useWallet());
 
-    await act(async () => { await result.current.connect(); });
+    await act(async () => {
+      await result.current.connect();
+    });
 
     const xdr = await result.current.signTransaction("unsigned-xdr");
     expect(xdr).toBe("signed-xdr");
@@ -91,7 +95,9 @@ describe("useWallet", () => {
 
   it("isNetworkMismatch is false when network matches", async () => {
     const { result } = renderHook(() => useWallet());
-    await act(async () => { await result.current.connect(); });
+    await act(async () => {
+      await result.current.connect();
+    });
     // wallet returns testnet passphrase which matches stellarConfig
     expect(result.current.isNetworkMismatch).toBe(false);
   });

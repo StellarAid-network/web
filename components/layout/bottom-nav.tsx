@@ -18,7 +18,10 @@ export function BottomNav(): React.ReactElement {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-background md:hidden">
+    <nav
+      aria-label="Mobile navigation"
+      className="fixed inset-x-0 bottom-0 z-40 border-t bg-background md:hidden"
+    >
       <ul className="grid grid-cols-4">
         {ITEMS.map((item) => {
           const Icon = item.icon;

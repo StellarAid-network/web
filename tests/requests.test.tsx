@@ -78,9 +78,7 @@ describe("Day 5 Help Requests: Schemas, Chain Reconciliation, Components, and Li
     const hash = await computeContentHash(metadata);
     expect(hash).toMatch(/^[a-f0-9]{64}$/);
     expect(await verifyContentHash(metadata, hash)).toBe(true);
-    expect(
-      await verifyContentHash({ ...metadata, title: "Tampered Title" }, hash),
-    ).toBe(false);
+    expect(await verifyContentHash({ ...metadata, title: "Tampered Title" }, hash)).toBe(false);
   });
 
   it("enforces chain-wins rule in reconcileRequestWithChain", () => {
@@ -232,9 +230,9 @@ describe("Day 5 Help Requests: Schemas, Chain Reconciliation, Components, and Li
     expect(updatedRequest.contributions[0]?.refunded).toBe(true);
 
     // Second refund attempt is rejected (NothingToRefund)
-    await expect(
-      claimRefund({ requestId: created.id, contributor: CONTRIBUTOR }),
-    ).rejects.toThrow("NothingToRefund");
+    await expect(claimRefund({ requestId: created.id, contributor: CONTRIBUTOR })).rejects.toThrow(
+      "NothingToRefund",
+    );
   });
 
   it("completes Journey 2: create -> fund -> milestone -> release", async () => {

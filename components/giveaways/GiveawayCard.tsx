@@ -54,12 +54,14 @@ export function GiveawayCard({ giveaway }: GiveawayCardProps): React.ReactElemen
             </div>
             <div className="flex items-center gap-1">
               <Users className="h-3.5 w-3.5" />
-              <span>{giveaway.claimants.length} claimer{giveaway.claimants.length === 1 ? "" : "s"}</span>
+              <span>
+                {giveaway.claimants.length} claimer{giveaway.claimants.length === 1 ? "" : "s"}
+              </span>
             </div>
           </div>
 
           {giveaway.expiresAt && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground pt-1 border-t">
+            <div className="flex items-center gap-1 border-t pt-1 text-xs text-muted-foreground">
               <Clock className="h-3.5 w-3.5" />
               <span>Expires {new Date(giveaway.expiresAt).toLocaleDateString()}</span>
             </div>
